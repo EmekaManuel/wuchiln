@@ -14,7 +14,7 @@ export default function Layout({ children }: any) {
       <div className="bg-gray-200 w-screen h-screen flex">
         <Nav />
         <div className="bg-white flex-grow mt-2 mr-2 p-4 mb-2 rounded relative rounded-large">
-          {children}{" "}
+          {children}
         </div>
       </div>
     );
