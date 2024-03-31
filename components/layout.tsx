@@ -2,6 +2,7 @@ import Nav from "@/components/nav";
 import { Button } from "@/components/ui/button";
 
 import { signIn, useSession } from "next-auth/react";
+import { Toaster } from "./ui/toaster";
 
 export default function Layout({ children }: any) {
   const { data: session, status } = useSession();
@@ -16,6 +17,7 @@ export default function Layout({ children }: any) {
         <div className="bg-white flex-grow mt-2 mr-2 p-4 mb-2 rounded relative rounded-large">
           {children}
         </div>
+        <Toaster/>
       </div>
     );
   }

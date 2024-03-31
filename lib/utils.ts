@@ -33,7 +33,7 @@ export interface MyAxiosSuccess<T = any> extends AxiosResponse {
 }
 
 export type ProductData = {
-  _id: any;
+  _id: string;
   productName: string;
   description: string;
   price: number;
