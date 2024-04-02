@@ -38,4 +38,6 @@ export type ProductData = {
   description: string;
   price: number;
   marketPrice: number;
+  status: string
+  images: string[]
 };
