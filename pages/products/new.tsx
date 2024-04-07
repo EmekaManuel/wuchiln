@@ -36,6 +36,7 @@ const NewProduct = () => {
   };
 
   const uploadImage = async (event: any) => {
+    event.preventDefault();
     const files = event.target?.files;
 
     if (files?.length > 0) {

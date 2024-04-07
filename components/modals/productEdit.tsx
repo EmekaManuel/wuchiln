@@ -50,12 +50,12 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
     product?.images || []
   );
 
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setEditedProduct(product);
     setEditedImages(product?.images || []);
-  }, [product?.images]);
-  
-  console.log(editedImages)
+  }, [product]);
 
   const { toast } = useToast();
 
@@ -89,12 +89,8 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
         console.log("the response dot data", response.data);
         const newImages = await response.data.images;
 
-        console.log("new images:" ,newImages)
-        setEditedImages((prevImages) => [
-          ...prevImages,
-          ...newImages,
-        ]);
-     
+        console.log("new images:", newImages);
+        setEditedImages((prevImages) => [...prevImages, ...newImages]);
       } catch (error) {
         console.error("Error uploading images:", error);
       }
@@ -118,7 +114,9 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
     console.log("Combined product:", combinedProduct);
 
     try {
+      setIsLoading(true);
       await axios.put(`/api/products/`, { _id, ...combinedProduct });
+      setIsLoading(false);
       toast({
         description: "✅ Product Edited Successfully!",
       });
@@ -187,7 +185,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
               <Label htmlFor="marketPrice" className="text-right">
                 Product Images
               </Label>
-              {product?.images?.map((image, index) => (
+              {editedImages?.map((image, index) => (
                 <div key={index} className="w-100 h-100">
                   <Image
                     className="w-[120px] h-[80px] object-cover rounded-md"
@@ -198,19 +196,22 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
                   />
                 </div>
               ))}
-              <Label
-                htmlFor="productImages"
-                className="w-full h-full bg-gray-300 rounded-md flex justify-center items-center cursor-pointer"
-              >
-                <UploadIcon className="text-white" />
-                <input
-                  type="file"
-                  id="productImages"
-                  className="hidden"
-                  onChange={handleAddImages}
-                  multiple
-                />
-              </Label>
+
+              {editedImages?.length < 3 && (
+                <Label
+                  htmlFor="productImages"
+                  className="w-full h-full bg-gray-300 rounded-md flex justify-center items-center cursor-pointer"
+                >
+                  <UploadIcon className="text-white" />
+                  <input
+                    type="file"
+                    id="productImages"
+                    className="hidden"
+                    onChange={handleAddImages}
+                    multiple
+                  />
+                </Label>
+              )}
             </div>
           )}
 
@@ -241,7 +242,11 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
         </div>
         <DialogFooter>
           <Button onClick={handleSaveChanges}>
-            <Loader className="animate-spin" />
+            {isLoading ? (
+              <Loader className="animate-spin" />
+            ) : (
+              <p>save changes</p>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
