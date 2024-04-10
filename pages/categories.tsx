@@ -62,7 +62,7 @@ const CategoryPage = () => {
     console.log("create category", data);
     await axios.post("/api/categories.api", data);
     setcategoryName("");
-    setParentCategory(null)
+  
   };
 
   const handleDeleteCategory = (category: CategoryData) => {

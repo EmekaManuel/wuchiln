@@ -21,7 +21,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import { CategoryData } from "@/lib/utils";
-import Category from "@/models/category.model";
 
 interface CategoryEditModalProps {
   isOpen: boolean;
@@ -35,6 +34,9 @@ const CategoryEditModal: React.FC<CategoryEditModalProps> = ({
   onClose,
   category,
 }) => {
+
+  const { toast } = useToast();
+
   const [editedCategory, setEditedCategory] = useState<CategoryData | null>(
     category
   );
@@ -45,11 +47,19 @@ const CategoryEditModal: React.FC<CategoryEditModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setEditedCategory(category);
     fetchCategories();
-  }, [categories]);
+  }, []); 
 
-  const { toast } = useToast();
+  useEffect(() => {
+    setEditedCategory(category); 
+  }, [category]);
+
+  const fetchCategories = () => {
+    axios
+      .get("/api/categories.api")
+      .then((response) => setCategories(response.data.data))
+      .catch((error) => console.error("Error fetching categories:", error));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -70,6 +80,7 @@ const CategoryEditModal: React.FC<CategoryEditModalProps> = ({
       ...prevState!,
       parentCategory: value,
     }));
+    console.log(editedCategory)
   };
 
   const handleSaveChanges = async () => {
@@ -94,12 +105,7 @@ const CategoryEditModal: React.FC<CategoryEditModalProps> = ({
     }
   };
 
-  const fetchCategories = () => {
-    axios
-      .get("/api/categories.api")
-      .then((response) => setCategories(response.data.data))
-      .catch((error) => console.error("Error fetching categories:", error));
-  };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -130,13 +136,12 @@ const CategoryEditModal: React.FC<CategoryEditModalProps> = ({
 
             <Select onValueChange={handleSelect}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Status" />
+                <SelectValue placeholder="Select New Category" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
                   <SelectItem key={category._id} value={category._id}>
-                    {category.categoryName}{" "}
-                    {/* Assuming parentCategory is a string */}
+                    {category.categoryName}
                   </SelectItem>
                 ))}
               </SelectContent>

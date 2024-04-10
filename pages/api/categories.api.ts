@@ -14,14 +14,14 @@ export default async function handler(
       try {
         const { categoryName, parentCategory } = req.body;
         console.log("body before sending", { categoryName, parentCategory });
-        
+
         const categoryData: Partial<any> = {
           categoryName,
-          ...(parentCategory && { parentCategory }), 
+          ...(parentCategory && { parentCategory }),
         };
-    
+
         const createdCategory = await Category.create(categoryData);
-        console.log("created category",createdCategory);
+        console.log("created category", createdCategory);
         res.status(201).json({ success: true, data: createdCategory });
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });
@@ -30,7 +30,7 @@ export default async function handler(
 
     case "GET":
       try {
-        const category: any = await Category.find().populate('parentCategory');
+        const category: any = await Category.find().populate("parentCategory");
         res.status(200).json({ success: true, data: category });
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });
@@ -40,7 +40,7 @@ export default async function handler(
     case "DELETE":
       try {
         const { _id } = req.body;
-        console.log("this", _id)
+        console.log("this", _id);
         console.log(req.body);
         const deletedCategory = await Category.findOneAndDelete({ _id });
         console.log("deleted category", deletedCategory);
@@ -52,16 +52,19 @@ export default async function handler(
 
     case "PUT":
       try {
-        const { _id, categoryName, parentCategory}: any = req.body;
-        const updatedProduct = await Category.updateOne(
+        const { _id, categoryName, parentCategory }: any = req.body;
+        console.log("body before sending", { categoryName, parentCategory });
+
+        const updatedCategory = await Category.updateOne(
           { _id },
           {
-            categoryName,parentCategory
+            categoryName,
+            parentCategory,
           },
           { new: true }
         );
 
-        if (updatedProduct) {
+        if (updatedCategory) {
           res.status(200).json({ success: true });
         } else {
           res.status(404).json({ success: false, error: "Category not found" });
