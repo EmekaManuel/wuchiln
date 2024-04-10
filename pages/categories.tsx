@@ -62,7 +62,7 @@ const CategoryPage = () => {
     console.log("create category", data);
     await axios.post("/api/categories.api", data);
     setcategoryName("");
-  
+    setParentCategory(null);
   };
 
   const handleDeleteCategory = (category: CategoryData) => {
@@ -71,8 +71,8 @@ const CategoryPage = () => {
   };
 
   const handleEditCategory = (category: CategoryData) => {
-    setSelectedCategory(category)
-    setIsEditModalOpen(true)
+    setSelectedCategory(category);
+    setIsEditModalOpen(true);
   };
 
   function handleConfirmDelete(): void {
@@ -88,9 +88,9 @@ const CategoryPage = () => {
       <AlertDialog>
         <Dialog>
           <h1 className="text-blue-900 text-xl mb-10 font-bold">
-            {
-              editedCategory ? `Edit Category ${editedCategory?.categoryName}` : "Create New Category"
-            }
+            {editedCategory
+              ? `Edit Category ${editedCategory?.categoryName}`
+              : "Create New Category"}
           </h1>
           <form onSubmit={createCategory} className="flex flex-col">
             <div className=" w-full">
@@ -120,11 +120,15 @@ const CategoryPage = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {categories?.length > 0 &&
-                      categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.categoryName}
-                        </SelectItem>
-                      ))}
+                      categories.map(
+                        (category) =>
+                          (parentCategory !== null ||
+                            category._id !== parentCategory) && (
+                            <SelectItem key={category._id} value={category._id}>
+                              {category.categoryName}
+                            </SelectItem>
+                          )
+                      )}
                   </SelectContent>
                 </Select>
 
