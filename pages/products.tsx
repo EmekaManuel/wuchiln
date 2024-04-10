@@ -1,4 +1,4 @@
-import ConfirmationDialog from "@/components/alerts/deleteProduct";
+import ConfirmationDialog from "@/components/alerts/deleteConfirmation";
 import Layout from "@/components/layout";
 import ProductEditModal from "@/components/modals/productEdit";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -31,7 +31,7 @@ const Products = () => {
 
   useEffect(() => {
     axios
-      .get("/api/products")
+      .get("/api/products.api")
       .then((response) => setProducts(response.data.data));
   }, [products]);
 
@@ -149,9 +149,10 @@ const Products = () => {
             <ConfirmationDialog
               isOpen={isDeleteModalOpen}
               onClose={() => setIsDeleteModalOpen(false)}
+              resourceType="product"
               onConfirm={handleConfirmDelete}
-              title="Delete Item"
-              description={`${selectedProduct?.productName}`}
+              title="Delete Product"
+              description={`${selectedProduct?.productName}`.toUpperCase()}
               cancelText="Cancel"
               confirmText="Delete"
               product={selectedProduct}

@@ -1,28 +1,28 @@
 import { mongooseConnect } from "@/lib/mongoose";
-import { ApiResponse, CategoryData } from "@/lib/utils";
-import Category from "@/models/category";
+import { ApiResponse } from "@/lib/utils";
+import Category from "@/models/category.model";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ApiResponse<CategoryData>>
+  res: NextApiResponse<ApiResponse<any>>
 ) {
   await mongooseConnect();
 
   switch (req.method) {
     case "POST":
       try {
-        const { categoryName, parentCategory }: CategoryData = req.body;
+        const { categoryName, parentCategory } = req.body;
         console.log("body before sending", { categoryName, parentCategory });
         
-        const categoryData: Partial<CategoryData> = {
+        const categoryData: Partial<any> = {
           categoryName,
           ...(parentCategory && { parentCategory }), 
         };
     
-        const createdProduct = await Category.create(categoryData);
-        console.log(createdProduct);
-        res.status(201).json({ success: true, data: createdProduct });
+        const createdCategory = await Category.create(categoryData);
+        console.log("created category",createdCategory);
+        res.status(201).json({ success: true, data: createdCategory });
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });
       }
@@ -30,7 +30,7 @@ export default async function handler(
 
     case "GET":
       try {
-        const category: CategoryData = await Category.find().populate('parentCategory').lean();
+        const category: any = await Category.find().populate('parentCategory');
         res.status(200).json({ success: true, data: category });
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });
@@ -40,9 +40,10 @@ export default async function handler(
     case "DELETE":
       try {
         const { _id } = req.body;
+        console.log("this", _id)
         console.log(req.body);
-        const deleteProduct = await Category.findOneAndDelete({ _id });
-        console.log(deleteProduct);
+        const deletedCategory = await Category.findOneAndDelete({ _id });
+        console.log("deleted category", deletedCategory);
         res.status(200).json({ success: true });
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });
@@ -51,11 +52,11 @@ export default async function handler(
 
     case "PUT":
       try {
-        const { _id, categoryName }: CategoryData = req.body;
+        const { _id, categoryName, parentCategory}: any = req.body;
         const updatedProduct = await Category.updateOne(
           { _id },
           {
-            categoryName,
+            categoryName,parentCategory
           },
           { new: true }
         );
@@ -63,7 +64,7 @@ export default async function handler(
         if (updatedProduct) {
           res.status(200).json({ success: true });
         } else {
-          res.status(404).json({ success: false, error: "Product not found" });
+          res.status(404).json({ success: false, error: "Category not found" });
         }
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });

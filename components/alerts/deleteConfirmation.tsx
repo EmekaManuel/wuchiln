@@ -21,7 +21,9 @@ interface ConfirmationDialogProps {
   description: string;
   cancelText?: string;
   confirmText?: string;
+  resourceType: "product" | "category"; // Specify the resource type
   product?: any;
+  category?: any;
 }
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
@@ -29,22 +31,30 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   onClose,
   title,
   description,
-  product,
   cancelText = "Cancel",
   confirmText = "Continue",
+  resourceType,
+  product,
+  category,
 }) => {
   const { toast } = useToast();
 
   const onConfirm = async () => {
-    const _id = product?._id;
 
-    console.log("reached here", _id);
+    const _id = resourceType === "product" ? product && product._id : category?._id && category._id;
+
 
     try {
-      await axios.delete(`/api/products/`, { data: { _id } });
+      const endpoint =
+        resourceType === "product"
+          ? `/api/products.api`
+          : `/api/categories.api`;
+      await axios.delete(endpoint, { data: { _id } });
+      console.log(endpoint)
+      console.log({_id})
       console.log("deleted");
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error(`Error deleting ${resourceType}:`, error);
     }
   };
 
@@ -53,7 +63,11 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription className="capitalize">Are you sure you want to delete this item named <span className="font-bold text-black">{description}</span> from inventory ?</AlertDialogDescription>
+          <AlertDialogDescription className="capitalize">
+            Are you sure you want to delete this {resourceType} named
+            <span className="font-bold pl-1 capitalize text-black">{description}</span> from
+            inventory?
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onClose}>{cancelText}</AlertDialogCancel>

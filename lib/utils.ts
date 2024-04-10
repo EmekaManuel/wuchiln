@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { type ClassValue, clsx } from "clsx";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { twMerge } from "tailwind-merge";
 import * as z from "zod";
 
@@ -42,9 +42,8 @@ export type ProductData = {
   images: string[];
 };
 
-  export type CategoryData = {
-    _id: string;
-    categoryName: string;
-    parentCategory?: mongoose.Types.ObjectId | undefined; 
-  };
-  
+export type CategoryData = {
+  _id: string;
+  categoryName: string;
+  parentCategory: any
+}

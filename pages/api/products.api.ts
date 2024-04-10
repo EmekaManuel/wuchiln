@@ -1,6 +1,6 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { ApiResponse, ProductData } from "@/lib/utils";
-import Product from "@/models/product";
+import Product from "@/models/product.model";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(

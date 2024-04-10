@@ -31,7 +31,7 @@ const NewProduct = () => {
       images,
     };
     console.log(data);
-    await axios.post("/api/products", data);
+    await axios.post("/api/products.api", data);
     setgoToProductPage(true);
   };
 
@@ -46,7 +46,7 @@ const NewProduct = () => {
       }
 
       try {
-        const response = await axios.post("/api/upload", data, {
+        const response = await axios.post("/api/upload.api", data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         console.log(response.data);

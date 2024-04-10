@@ -115,7 +115,7 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
 
     try {
       setIsLoading(true);
-      await axios.put(`/api/products/`, { _id, ...combinedProduct });
+      await axios.put(`/api/products.api/`, { _id, ...combinedProduct });
       setIsLoading(false);
       toast({
         description: "✅ Product Edited Successfully!",
