@@ -7,6 +7,7 @@ import {
   HomeIcon,
   ListIcon,
   MessageCircleCode,
+  SquareStack,
 } from "lucide-react";
 
 const Nav = () => {
@@ -37,6 +38,13 @@ const Nav = () => {
         >
           <BoxIcon />
           Products
+        </Link>
+        <Link
+          href="/categories"
+          className={`flex gap-2 p-1 ${isActiveLink("/categories")}`}
+        >
+          <SquareStack />
+          Category
         </Link>
         <Link
           href="/orders"
