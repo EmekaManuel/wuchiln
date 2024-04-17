@@ -96,6 +96,8 @@ const ProductEditModal: React.FC<ProductEditModalProps> = ({
       }
     }
   };
+
+  
   const handleSelect = (value: string) => {
     setEditedProduct((prevState) => ({
       ...prevState!,

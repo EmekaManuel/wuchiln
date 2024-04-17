@@ -2,12 +2,14 @@ import Layout from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { CategoryData } from "@/lib/utils";
 import axios from "axios";
 import { UploadIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const NewProduct = () => {
   const router = useRouter();
@@ -17,7 +19,8 @@ const NewProduct = () => {
   const [price, setPrice] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [marketPrice, setMarketPrice] = useState("");
-
+  const [productCategory, setProductCategory] = useState<CategoryData[]>([]);
+  const [productCategoryData, setProductCategoryData] = useState<string | null>("");
   const [goToProductPage, setgoToProductPage] = useState(false);
 
   const createProduct = async (event: any) => {
@@ -26,6 +29,7 @@ const NewProduct = () => {
       productName,
       description,
       price,
+      productCategory,
       marketPrice,
       status,
       images,
@@ -33,6 +37,18 @@ const NewProduct = () => {
     console.log(data);
     await axios.post("/api/products.api", data);
     setgoToProductPage(true);
+  };
+
+  useEffect(() => {
+    fetchCategories();
+    console.log(productCategory);
+  }, []);
+
+  const fetchCategories = () => {
+    axios
+      .get("/api/categories.api")
+      .then((response) => setProductCategory(response.data.data))
+      .catch((error) => console.error("Error fetching categories:", error));
   };
 
   const uploadImage = async (event: any) => {
@@ -86,7 +102,23 @@ const NewProduct = () => {
           value={description}
           placeholder="description"
         />
-        <Label htmlFor="price">Price in NGN</Label>
+
+        <Label htmlFor="description">Product Category</Label>
+
+        <Select onValueChange={(newValue) => {setProductCategoryData(newValue)}}>
+              <SelectTrigger className="w-1/2">
+                <SelectValue placeholder="Select New Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {productCategory.map((category) => (
+                  <SelectItem key={category._id} value={category._id}>
+                    {category.categoryName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+        <Label className="my-4" htmlFor="price">Price in NGN</Label>
         <Input
           type="number"
           id="price"

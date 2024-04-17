@@ -12,19 +12,35 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       try {
-        const { productName, description, price, marketPrice, status, images }: ProductData =
-          req.body;
+        const {
+          productName,
+          description,
+          price,
+          productCategory,
+          marketPrice,
+          status,
+          images,
+        }: ProductData = req.body;
 
-          console.log("body before sending", {productName, description, price, marketPrice, status, images})
+        console.log("body before sending", {
+          productName,
+          description,
+          price,
+          marketPrice,
+          productCategory,
+          status,
+          images,
+        });
         const createdProduct = await Product.create({
           productName,
           description,
           price,
           marketPrice,
+          productCategory,
           status,
-          images
+          images,
         });
-        console.log(createdProduct)
+        console.log(createdProduct);
         res.status(201).json({ success: true, data: createdProduct });
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });
@@ -43,11 +59,10 @@ export default async function handler(
     case "DELETE":
       try {
         const { _id } = req.body;
-        console.log(req.body)
-        const deleteProduct = await Product.findOneAndDelete({_id})
-        console.log(deleteProduct)
+        console.log(req.body);
+        const deleteProduct = await Product.findOneAndDelete({ _id });
+        console.log(deleteProduct);
         res.status(200).json({ success: true });
-
       } catch (error: any) {
         res.status(500).json({ success: false, error: error.message });
       }
@@ -61,8 +76,9 @@ export default async function handler(
           description,
           price,
           marketPrice,
+          productCategory,
           status,
-          images
+          images,
         }: ProductData = req.body;
         const updatedProduct = await Product.updateOne(
           { _id },
@@ -70,9 +86,10 @@ export default async function handler(
             productName,
             description,
             price,
+            productCategory,
             marketPrice,
             status,
-            images
+            images,
           },
           { new: true }
         );

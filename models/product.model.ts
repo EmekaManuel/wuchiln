@@ -6,11 +6,13 @@ interface IProduct extends Document {
   price: number;
   marketPrice: number;
   status: string;
-  images:string[]
+  images:string[];
+  productCategory: string
 }
 
 const productSchema = new Schema<IProduct>({
   productName: { type: String, required: true },
+  productCategory: {type: String, required: true},
   description: { type: String, required: true },
   price: { type: Number, required: true },
   marketPrice: { type: Number, required: true },
